@@ -58,10 +58,21 @@ LLM_MODEL=…
 MULTIMODAL_LLM_MODEL=…
 ```
 
-### Running
+## Running
+
+With the Makefile and `.env` in place, you have two options:
+
+**1. Build & run via Makefile**
 
 ```bash
-./patient-chatbot
+cp .env.example .env     # one-time only
+make run                  # builds and runs the server
+```
+
+**2. Development mode (no binary)**
+
+```bash
+make run-dev              # loads .env and runs via `go run`
 ```
 
 Server listens on **:8080** by default.
