@@ -15,7 +15,7 @@ run: build
 	@echo "Starting server (with .env)..."
 	@./$(BINARY)
 
-run-dev:
+dev:
 	@echo "Running in dev mode (with .env)..."
 	@env $$(grep -v '^#' .env | xargs) go run $(CMD_DIR)
 

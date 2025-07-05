@@ -7,8 +7,10 @@ import (
 	"patient-chatbot/internal/client/vectordb"
 	"patient-chatbot/internal/config"
 	"patient-chatbot/internal/handler"
+	"patient-chatbot/internal/repository"
 	"patient-chatbot/internal/service"
 
+	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 )
 
@@ -23,10 +25,14 @@ func NewServer(cfg *config.Config) *Server {
 	if err != nil {
 		log.Fatalf("Failed to create vectordb client: %v", err)
 	}
-	chatService := service.NewService(cfg, llmClient, embeddingClient, vectordbClient)
+	repository := repository.NewRepository(cfg.DBURL)
+	chatService := service.NewService(cfg, llmClient, embeddingClient, vectordbClient, repository)
 	h := handler.NewHandler(chatService)
 
 	r := gin.Default()
+
+	r.Use(cors.Default())
+
 	RegisterRoutes(r, h)
 
 	return &Server{router: r}
@@ -42,5 +48,8 @@ func RegisterRoutes(r *gin.Engine, h *handler.Handler) {
 		api.GET("/health", h.HandleGetHealth)
 		api.POST("/chat", h.HandleChat)
 		api.POST("/upload", h.HandleUpload)
+		api.GET("/documents", h.HandleGetDocuments)
+		api.DELETE("/document/:id", h.HandleDeleteDocument)
+		api.DELETE("/content/:id", h.HandleDeleteContent)
 	}
 }

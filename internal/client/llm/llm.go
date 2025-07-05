@@ -8,6 +8,7 @@ import (
 	"io"
 	"net/http"
 	"patient-chatbot/internal/config"
+	"patient-chatbot/internal/dto"
 )
 
 const (
@@ -21,9 +22,13 @@ const (
 	`
 	EXTRACT_SYSTEM_PROMPT = `
 	You are a medical assistant. You will be given the plain text of a medical document.
-	Extract every complete sentence or list item exactly as written—preserve wording, punctuation, and numbering.
-	Output nothing else: no headings, no commentary, no fragments.
-	List each extracted sentence or bullet on its own line.
+	1. Generate a concise **title** (3-7 words) that summarizes the document.
+	2. Propose one **category** (e.g. “Cardiology”, “Symptoms”, “Treatment Guidelines”, ...etc) that best describe the document.
+	3. Extract every complete sentence or list item exactly as written—preserve wording, punctuation, and numbering.
+
+	Output only a compact JSON object—with no extraneous line breaks—like:
+	{"title":"…","category":"…","chunks":["…","…",…]}
+	Don't output anything else (no commentary or headings).
 	`
 )
 
@@ -35,7 +40,7 @@ func NewLLMClient(cfg *config.Config) *LLMClient {
 	return &LLMClient{cfg: cfg}
 }
 
-func (l *LLMClient) Chat(ctx context.Context, question string, chunks []string) (string, error) {
+func (l *LLMClient) Chat(ctx context.Context, messages []dto.Message, chunks []string) (string, error) {
 	var sysBuf bytes.Buffer
 	sysBuf.WriteString(CHAT_SYSTEM_PROMPT)
 	if len(chunks) > 0 {
@@ -47,7 +52,10 @@ func (l *LLMClient) Chat(ctx context.Context, question string, chunks []string) 
 
 	msgs := []ChatMessageBlock{
 		{Role: "system", Content: sysBuf.String()},
-		{Role: "user", Content: question},
+	}
+
+	for _, message := range messages {
+		msgs = append(msgs, ChatMessageBlock{Role: message.Role, Content: message.Content})
 	}
 
 	reqBody := ChatRequest{
@@ -67,7 +75,7 @@ func (l *LLMClient) Chat(ctx context.Context, question string, chunks []string) 
 	return CallGroqAPI(ctx, l.cfg, payload)
 }
 
-func (l *LLMClient) ExtractText(ctx context.Context, encodedFile string) (string, error) {
+func (l *LLMClient) ExtractText(ctx context.Context, encodedFile string) (*ExtractTextResponse, error) {
 	textBlock := ExtractTextContentBlock{
 		Type: "text",
 		Text: EXTRACT_SYSTEM_PROMPT,
@@ -96,9 +104,20 @@ func (l *LLMClient) ExtractText(ctx context.Context, encodedFile string) (string
 
 	payload, err := json.Marshal(reqBody)
 	if err != nil {
-		return "", fmt.Errorf("marshal extract text request: %w", err)
+		return nil, fmt.Errorf("marshal extract text request: %w", err)
 	}
-	return CallGroqAPI(ctx, l.cfg, payload)
+	res, err := CallGroqAPI(ctx, l.cfg, payload)
+	if err != nil {
+		return nil, err
+	}
+
+	fmt.Println(res)
+	var extractTextResponse ExtractTextResponse
+	if err := json.Unmarshal([]byte(res), &extractTextResponse); err != nil {
+		return nil, fmt.Errorf("unmarshal extract text response: %w", err)
+	}
+
+	return &extractTextResponse, nil
 }
 
 func CallGroqAPI(ctx context.Context, cfg *config.Config, payload []byte) (string, error) {

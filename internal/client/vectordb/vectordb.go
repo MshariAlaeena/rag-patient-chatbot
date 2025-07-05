@@ -63,10 +63,18 @@ func (v *VectordbClient) Search(ctx context.Context, userQuery string, topK ...i
 
 }
 
-func (v *VectordbClient) Upsert(ctx context.Context, records []*pinecone.IntegratedRecord) error {
+func (v *VectordbClient) CreateChunks(ctx context.Context, records []*pinecone.IntegratedRecord) error {
 	err := v.idxConnection.UpsertRecords(ctx, records)
 	if err != nil {
 		return fmt.Errorf("UpsertRecords: %w", err)
+	}
+	return nil
+}
+
+func (v *VectordbClient) DeleteChunks(ctx context.Context, ids []string) error {
+	err := v.idxConnection.DeleteVectorsById(ctx, ids)
+	if err != nil {
+		return fmt.Errorf("DeleteVectorsById: %w", err)
 	}
 	return nil
 }

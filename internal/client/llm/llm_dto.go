@@ -1,8 +1,10 @@
 package llm
 
+import "patient-chatbot/internal/dto"
+
 type ChatMessageBlock struct {
-	Role    string `json:"role"`
-	Content string `json:"content"`
+	Role    dto.Role `json:"role"`
+	Content string   `json:"content"`
 }
 
 type ChatRequest struct {
@@ -38,6 +40,12 @@ type ExtractTextRequest struct {
 	TopP                float32                   `json:"top_p"`
 	Stream              bool                      `json:"stream"`
 	Stop                interface{}               `json:"stop"`
+}
+
+type ExtractTextResponse struct {
+	Title    string   `json:"title"`
+	Category string   `json:"category"`
+	Chunks   []string `json:"chunks"`
 }
 
 type ChatChoice struct {
