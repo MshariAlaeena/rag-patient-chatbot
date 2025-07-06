@@ -7,8 +7,10 @@ import (
 	"patient-chatbot/internal/client/vectordb"
 	"patient-chatbot/internal/config"
 	"patient-chatbot/internal/handler"
+	"patient-chatbot/internal/middleware"
 	"patient-chatbot/internal/repository"
 	"patient-chatbot/internal/service"
+	"patient-chatbot/internal/utils"
 
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
@@ -32,7 +34,7 @@ func NewServer(cfg *config.Config) *Server {
 	r := gin.Default()
 
 	r.Use(cors.Default())
-
+	r.Use(middleware.LocaleMiddleware(utils.Bundle))
 	RegisterRoutes(r, h)
 
 	return &Server{router: r}
