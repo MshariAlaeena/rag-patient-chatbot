@@ -111,7 +111,6 @@ func (l *LLMClient) ExtractText(ctx context.Context, encodedFile string) (*Extra
 		return nil, err
 	}
 
-	fmt.Println(res)
 	var extractTextResponse ExtractTextResponse
 	if err := json.Unmarshal([]byte(res), &extractTextResponse); err != nil {
 		return nil, fmt.Errorf("unmarshal extract text response: %w", err)

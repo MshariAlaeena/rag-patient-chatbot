@@ -3,6 +3,7 @@ package main
 import (
 	"log"
 	"patient-chatbot/internal/config"
+	"patient-chatbot/internal/utils"
 )
 
 func main() {
@@ -11,6 +12,7 @@ func main() {
 		log.Fatalf("error loading config: %v", err)
 	}
 
+	utils.Init()
 	server := NewServer(cfg)
 
 	if err := server.Run(); err != nil {
