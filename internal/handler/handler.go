@@ -3,6 +3,8 @@ package handler
 import (
 	"patient-chatbot/internal/service"
 
+	"patient-chatbot/internal/utils"
+
 	"github.com/gin-gonic/gin"
 )
 
@@ -15,29 +17,29 @@ func NewHandler(chatService *service.Service) *Handler {
 }
 
 func (h *Handler) HandleGetHealth(c *gin.Context) {
-	c.JSON(200, NewResponse("OK", "System is Up and Running!"))
+	c.JSON(200, NewResponse("OK", utils.Localize(c, "system_is_up_and_running")))
 }
 
 func (h *Handler) HandleChat(c *gin.Context) {
 	var request ChatRequestDTO
 	if err := c.ShouldBindJSON(&request); err != nil {
-		c.JSON(400, NewResponse(nil, "Request is invalid"))
+		c.JSON(400, NewResponse(nil, utils.Localize(c, "request_is_invalid")))
 		return
 	}
 
 	data, err := h.chatService.Chat(c.Request.Context(), request.Messages)
 	if err != nil {
-		c.JSON(500, NewResponse(nil, "an error occurred while processing your request"))
+		c.JSON(500, NewResponse(nil, utils.Localize(c, "an_error_occurred_while_processing_your_request")))
 		return
 	}
 
-	c.JSON(200, NewResponse(ChatResponseDTO{Answer: data}, "Chat message sent"))
+	c.JSON(200, NewResponse(ChatResponseDTO{Answer: data}, utils.Localize(c, "chat_message_sent")))
 }
 
 func (h *Handler) HandleUpload(c *gin.Context) {
 	var request UploadRequestDTO
 	if err := c.ShouldBind(&request); err != nil {
-		c.JSON(400, NewResponse(nil, "Request is invalid"))
+		c.JSON(400, NewResponse(nil, utils.Localize(c, "request_is_invalid")))
 		return
 	}
 
@@ -47,19 +49,19 @@ func (h *Handler) HandleUpload(c *gin.Context) {
 		return
 	}
 
-	c.JSON(200, NewResponse(nil, "File uploaded successfully"))
+	c.JSON(200, NewResponse(nil, utils.Localize(c, "file_uploaded_successfully")))
 }
 
 func (h *Handler) HandleGetDocuments(c *gin.Context) {
 	var request PaginationRequest
 	if err := c.ShouldBindQuery(&request); err != nil {
-		c.JSON(400, NewResponse(nil, "invalid request"))
+		c.JSON(400, NewResponse(nil, utils.Localize(c, "request_is_invalid")))
 		return
 	}
 
 	documents, total, err := h.chatService.GetDocuments(c.Request.Context(), request.Page, request.PageSize)
 	if err != nil {
-		c.JSON(500, NewResponse(nil, "an error occurred while fetching documents"))
+		c.JSON(500, NewResponse(nil, utils.Localize(c, "an_error_occurred_while_processing_your_request")))
 		return
 	}
 
@@ -86,25 +88,25 @@ func (h *Handler) HandleGetDocuments(c *gin.Context) {
 		PageSize:  request.PageSize,
 		Page:      request.Page,
 		Total:     total,
-	}, "Documents fetched successfully"))
+	}, utils.Localize(c, "documents_fetched_successfully")))
 }
 
 func (h *Handler) HandleDeleteDocument(c *gin.Context) {
 	id := c.Param("id")
 	err := h.chatService.DeleteDocument(c.Request.Context(), id)
 	if err != nil {
-		c.JSON(500, NewResponse(nil, "an error occurred while deleting document"))
+		c.JSON(500, NewResponse(nil, utils.Localize(c, "an_error_occurred_while_processing_your_request")))
 		return
 	}
-	c.JSON(200, NewResponse(nil, "Document deleted successfully"))
+	c.JSON(200, NewResponse(nil, utils.Localize(c, "document_deleted_successfully")))
 }
 
 func (h *Handler) HandleDeleteContent(c *gin.Context) {
 	id := c.Param("id")
 	err := h.chatService.DeleteChunk(c.Request.Context(), id)
 	if err != nil {
-		c.JSON(500, NewResponse(nil, "an error occurred while deleting content"))
+		c.JSON(500, NewResponse(nil, utils.Localize(c, "an_error_occurred_while_processing_your_request")))
 		return
 	}
-	c.JSON(200, NewResponse(nil, "Content deleted successfully"))
+	c.JSON(200, NewResponse(nil, utils.Localize(c, "content_deleted_successfully")))
 }
