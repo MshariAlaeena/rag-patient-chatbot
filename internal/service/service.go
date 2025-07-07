@@ -8,7 +8,6 @@ import (
 	"mime/multipart"
 	"net/http"
 	"path/filepath"
-	"patient-chatbot/internal/client/embedding"
 	"patient-chatbot/internal/client/llm"
 	"patient-chatbot/internal/client/vectordb"
 	"patient-chatbot/internal/config"
@@ -21,26 +20,23 @@ import (
 )
 
 type Service struct {
-	cfg             *config.Config
-	llmClient       *llm.LLMClient
-	embeddingClient *embedding.EmbeddingClient
-	vectordbClient  *vectordb.VectordbClient
-	repository      *repository.Repository
+	cfg            *config.Config
+	llmClient      *llm.LLMClient
+	vectordbClient *vectordb.VectordbClient
+	repository     *repository.Repository
 }
 
 func NewService(
 	cfg *config.Config,
 	llmClient *llm.LLMClient,
-	embeddingClient *embedding.EmbeddingClient,
 	vectordbClient *vectordb.VectordbClient,
 	repository *repository.Repository,
 ) *Service {
 	return &Service{
-		cfg:             cfg,
-		llmClient:       llmClient,
-		embeddingClient: embeddingClient,
-		vectordbClient:  vectordbClient,
-		repository:      repository,
+		cfg:            cfg,
+		llmClient:      llmClient,
+		vectordbClient: vectordbClient,
+		repository:     repository,
 	}
 }
 
