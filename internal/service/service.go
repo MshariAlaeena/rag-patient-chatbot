@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"io"
 	"mime/multipart"
+	"net/http"
 	"path/filepath"
 	"patient-chatbot/internal/client/embedding"
 	"patient-chatbot/internal/client/llm"
@@ -43,7 +44,7 @@ func NewService(
 	}
 }
 
-func (s *Service) Chat(ctx context.Context, messages []dto.Message) (string, error) {
+func (s *Service) Chat(ctx context.Context, messages []dto.Message, lang string) (string, error) {
 	chunks, err := s.vectordbClient.Search(ctx, messages[len(messages)-1].Content)
 	if err != nil {
 		return "", err
@@ -58,7 +59,7 @@ func (s *Service) Chat(ctx context.Context, messages []dto.Message) (string, err
 		messages = messages[len(messages)-50:]
 	}
 
-	response, err := s.llmClient.Chat(ctx, messages, chunksText)
+	response, err := s.llmClient.Chat(ctx, messages, chunksText, lang)
 	if err != nil {
 		return "", err
 	}
@@ -67,18 +68,39 @@ func (s *Service) Chat(ctx context.Context, messages []dto.Message) (string, err
 }
 
 func (s *Service) Upload(ctx context.Context, file *multipart.FileHeader) error {
-	encodedFile, err := encodeFile(file)
+	f, err := file.Open()
 	if err != nil {
-		return err
+		return fmt.Errorf("upload :: open file: %w", err)
+	}
+	defer f.Close()
+
+	buf := make([]byte, 512)
+	n, _ := f.Read(buf)
+	mimeType := http.DetectContentType(buf[:n])
+	isText := strings.HasPrefix(mimeType, "text/")
+
+	if _, err := f.Seek(0, io.SeekStart); err != nil {
+		return fmt.Errorf("upload :: seek: %w", err)
+	}
+	data, err := io.ReadAll(f)
+	if err != nil {
+		return fmt.Errorf("upload :: read file: %w", err)
 	}
 
-	extractedText, err := s.llmClient.ExtractText(ctx, encodedFile)
+	var payload string
+	if isText {
+		payload = string(data)
+	} else {
+		b64 := base64.StdEncoding.EncodeToString(data)
+		payload = fmt.Sprintf("data:%s;base64,%s", mimeType, b64)
+	}
+
+	extractedText, err := s.llmClient.ExtractText(ctx, payload, isText)
 	if err != nil {
-		return err
+		return fmt.Errorf("upload :: extractText: %w", err)
 	}
 
 	filename, ext := sanitizeFilename(file.Filename)
-
 	docId := uuid.New()
 	doc := &repository.Document{
 		BaseModel: repository.BaseModel{
@@ -92,7 +114,7 @@ func (s *Service) Upload(ctx context.Context, file *multipart.FileHeader) error 
 
 	err = s.repository.CreateDocument(ctx, doc)
 	if err != nil {
-		return err
+		return fmt.Errorf("upload :: createDocument: %w", err)
 	}
 
 	records := make([]*pinecone.IntegratedRecord, len(extractedText.Chunks))
@@ -114,37 +136,14 @@ func (s *Service) Upload(ctx context.Context, file *multipart.FileHeader) error 
 
 	err = s.repository.CreateChunks(ctx, chunks)
 	if err != nil {
-		return err
+		return fmt.Errorf("upload :: createChunks: %w", err)
 	}
 
 	err = s.vectordbClient.CreateChunks(ctx, records)
 	if err != nil {
-		return err
+		return fmt.Errorf("upload :: createChunks: %w", err)
 	}
 	return nil
-}
-
-func encodeFile(file *multipart.FileHeader) (string, error) {
-	f, err := file.Open()
-	if err != nil {
-		return "", fmt.Errorf("opening file: %w", err)
-	}
-	defer f.Close()
-
-	data, err := io.ReadAll(f)
-	if err != nil {
-		return "", fmt.Errorf("reading file: %w", err)
-	}
-
-	mimeType := file.Header.Get("Content-Type")
-	if mimeType == "" {
-		mimeType = "application/octet-stream"
-	}
-
-	b64 := base64.StdEncoding.EncodeToString(data)
-
-	dataURI := fmt.Sprintf("data:%s;base64,%s", mimeType, b64)
-	return dataURI, nil
 }
 
 func sanitizeFilename(filename string) (string, string) {
@@ -161,7 +160,7 @@ func (s *Service) GetDocuments(ctx context.Context, page int, pageSize int) ([]r
 	offset := (page - 1) * pageSize
 	documents, total, err := s.repository.GetAllDocuments(ctx, offset, pageSize)
 	if err != nil {
-		return nil, 0, err
+		return nil, 0, fmt.Errorf("getDocuments :: getAllDocuments: %w", err)
 	}
 	return documents, total, nil
 }
@@ -169,12 +168,12 @@ func (s *Service) GetDocuments(ctx context.Context, page int, pageSize int) ([]r
 func (s *Service) DeleteDocument(ctx context.Context, id string) error {
 	uuid, err := uuid.Parse(id)
 	if err != nil {
-		return err
+		return fmt.Errorf("deleteDocument :: uuid.Parse: %w", err)
 	}
 
 	document, err := s.repository.GetDocumentByID(ctx, uuid)
 	if err != nil {
-		return err
+		return fmt.Errorf("deleteDocument :: GetDocumentByID: %w", err)
 	}
 
 	chunksIds := make([]string, len(document.Chunks))
@@ -184,16 +183,16 @@ func (s *Service) DeleteDocument(ctx context.Context, id string) error {
 
 	err = s.vectordbClient.DeleteChunks(ctx, chunksIds)
 	if err != nil {
-		return err
+		return fmt.Errorf("deleteDocument :: DeleteChunks: %w", err)
 	}
 
 	err = s.repository.SoftDeleteDocumentAndChunks(ctx, uuid)
 	if err != nil {
 		err = s.RecoverChunks(ctx, document.Chunks)
 		if err != nil {
-			return err
+			return fmt.Errorf("deleteDocument :: recoverChunks: %w", err)
 		}
-		return err
+		return fmt.Errorf("deleteDocument :: softDeleteDocumentAndChunks: %w", err)
 	}
 	return nil
 }
@@ -201,26 +200,26 @@ func (s *Service) DeleteDocument(ctx context.Context, id string) error {
 func (s *Service) DeleteChunk(ctx context.Context, id string) error {
 	uuid, err := uuid.Parse(id)
 	if err != nil {
-		return err
+		return fmt.Errorf("deleteChunk :: uuid.Parse: %w", err)
 	}
 
 	chunk, err := s.repository.GetChunkByID(ctx, uuid)
 	if err != nil {
-		return err
+		return fmt.Errorf("deleteChunk :: getChunkByID: %w", err)
 	}
 
 	err = s.vectordbClient.DeleteChunks(ctx, []string{id})
 	if err != nil {
-		return err
+		return fmt.Errorf("deleteChunk :: deleteChunks: %w", err)
 	}
 
 	err = s.repository.SoftDeleteChunk(ctx, uuid)
 	if err != nil {
 		err = s.RecoverChunks(ctx, []repository.Chunk{*chunk})
 		if err != nil {
-			return err
+			return fmt.Errorf("deleteChunk :: recoverChunks: %w", err)
 		}
-		return err
+		return fmt.Errorf("deleteChunk :: softDeleteChunk: %w", err)
 	}
 
 	return nil

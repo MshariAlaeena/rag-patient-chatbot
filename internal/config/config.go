@@ -16,6 +16,7 @@ type Config struct {
 	JinaAuthToken        string
 	GroqAPIKey           string
 	LLMModel             string
+	ArabicLLMModel       string
 	MULTIMODAL_LLM_MODEL string
 	DBURL                string
 }
@@ -54,11 +55,12 @@ func Load() (*Config, error) {
 		JinaAuthToken:        os.Getenv("JINA_AUTH_TOKEN"),
 		GroqAPIKey:           os.Getenv("GROQ_API_KEY"),
 		LLMModel:             os.Getenv("LLM_MODEL"),
+		ArabicLLMModel:       os.Getenv("ARABIC_LLM_MODEL"),
 		MULTIMODAL_LLM_MODEL: os.Getenv("MULTIMODAL_LLM_MODEL"),
 		DBURL:                dbURL,
 	}
 
-	if cfg.PineconeAPIKey == "" || cfg.PineconeIndex == "" || cfg.PineconeHost == "" || cfg.GroqAPIKey == "" || cfg.LLMModel == "" || cfg.MULTIMODAL_LLM_MODEL == "" {
+	if cfg.PineconeAPIKey == "" || cfg.PineconeIndex == "" || cfg.PineconeHost == "" || cfg.GroqAPIKey == "" || cfg.LLMModel == "" || cfg.ArabicLLMModel == "" || cfg.MULTIMODAL_LLM_MODEL == "" {
 		return nil, fmt.Errorf("missing required environment variables")
 	}
 	return cfg, nil

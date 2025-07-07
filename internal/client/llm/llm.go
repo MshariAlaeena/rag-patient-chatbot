@@ -9,24 +9,44 @@ import (
 	"net/http"
 	"patient-chatbot/internal/config"
 	"patient-chatbot/internal/dto"
+	"strings"
 )
 
 const (
-	CHAT_SYSTEM_PROMPT = `
+	CHAT_SYSTEM_PROMPT_EN = `
 	You are Hamad, a professional and compassionate medical assistant.
-	Always use only the provided context snippets to answer patient questions.
-	If the context does not contain the information needed, respond with "I'm sorry, I don't have that information right now. Please consult your healthcare provider."
-	Keep answers clear, accurate, and empathetic.
-	Do not provide medical advice beyond the scope of the context; instead, encourage users to seek professional help when appropriate.
-	Format your response as a friendly paragraph, and, when relevant, cite which snippet you used (e.g., “Based on our guidelines: ...”).
+	Use the provided context snippets first. If they fully answer the question, respond using only them. if an answer is not found in the context, respond saying "I'm sorry, I don't have enough information right now. Please consult your healthcare provider."
+	If the context is incomplete but the question is general and low-risk (e.g. definitions, common best practices), you may answer from your medical knowledge—clearly stating you're relying on general knowledge.
+	If you answer from general knowledge, prepend: “Note: based on my general medical knowledge—”.
+	If the question requires specifics beyond context and general best practices (e.g. dosing for a specific patient), respond exactly:
+	“I'm sorry, I don't have enough information right now. Please consult your healthcare provider.”
+	Keep answers concise, clear, accurate, and empathetic.
+	Do NOT restate your role, add greetings, or ask follow-ups.
+	Format your reply as one friendly paragraph. When you cite a snippet, use exactly:
+	“Based on our guidelines: …”
+	If you cannot comply, respond exactly:
+	“ERROR: Unable to comply with instructions.”
+	`
+	CHAT_SYSTEM_PROMPT_AR = `
+	أنت حمد، مساعد طبي محترف ورحيم.
+	استخدم مقتطفات السياق المقدمة فقط للإجابة—لا تضف أي تحية أو مقدمة أو أسئلة متابعة.
+	إذا لم يحتوي السياق على المعلومات المطلوبة، أجب تمامًا:
+	“عذرًا، ليس لدي هذه المعلومة الآن. يُرجى استشارة مقدم الرعاية الصحية الخاص بك.”
+	حافظ على الإجابات واضحة ودقيقة ومتعاطفة.
+	لا تقدّم نصائح طبية تتجاوز نطاق السياق؛ بل شجّع المستخدمين على طلب المساعدة المتخصصة عند الحاجة.
+	نسّق إجابتك في فقرة ودودة واحدة فقط. عند الاقتضاء، استشهد بالمقتطف المستخدم (مثلاً: “بناءً على إرشاداتنا: …”).
+	إذا لم تستطع الالتزام بهذه التعليمات حرفيًا، أجب:
+	“خطأ: غير قادر على تنفيذ التعليمات.”
 	`
 	EXTRACT_SYSTEM_PROMPT = `
-	You are a medical assistant. You will be given the plain text of a medical document.
-	1. Generate a concise **title** (3-7 words) that summarizes the document.
-	2. Propose one **category** (e.g. “Cardiology”, “Symptoms”, “Treatment Guidelines”, ...etc) that best describe the document.
-	3. Extract every complete sentence or list item exactly as written—preserve wording, punctuation, and numbering.
-
-	Output only a compact JSON object—with no extraneous line breaks—like:
+	You are a medical assistant. You will be given plain text of a medical document.
+	1. Generate a concise **title** (3-7 words).  
+	2. Propose one **category** describing the document.  
+	3. Split the document into chunks of roughly 300-500 characters each, cutting only at sentence boundaries.  
+	- If a heading (e.g. “Symptoms”) would otherwise stand alone, attach it to the following sentence.  
+	- Do not emit any chunk shorter than one complete sentence.  
+	4. Output exactly this JSON object (compact, no line breaks)
+	Make sure all newlines inside strings are escaped as \n, double quotes are escaped as \", backslashes as \\, and any Unicode codepoint uses exactly four hex digits (e.g. \u00A0, not \u00a F)
 	{"title":"…","category":"…","chunks":["…","…",…]}
 	Don't output anything else (no commentary or headings).
 	`
@@ -40,9 +60,13 @@ func NewLLMClient(cfg *config.Config) *LLMClient {
 	return &LLMClient{cfg: cfg}
 }
 
-func (l *LLMClient) Chat(ctx context.Context, messages []dto.Message, chunks []string) (string, error) {
+func (l *LLMClient) Chat(ctx context.Context, messages []dto.Message, chunks []string, lang string) (string, error) {
 	var sysBuf bytes.Buffer
-	sysBuf.WriteString(CHAT_SYSTEM_PROMPT)
+	if lang == "en" {
+		sysBuf.WriteString(CHAT_SYSTEM_PROMPT_EN)
+	} else {
+		sysBuf.WriteString(CHAT_SYSTEM_PROMPT_AR)
+	}
 	if len(chunks) > 0 {
 		sysBuf.WriteString("Context:\n")
 		for _, chunkText := range chunks {
@@ -55,17 +79,31 @@ func (l *LLMClient) Chat(ctx context.Context, messages []dto.Message, chunks []s
 	}
 
 	for _, message := range messages {
-		msgs = append(msgs, ChatMessageBlock{Role: message.Role, Content: message.Content})
+		if strings.TrimSpace(message.Content) != "" {
+			msgs = append(msgs, ChatMessageBlock{
+				Role:    message.Role,
+				Content: message.Content,
+			})
+			continue
+		}
+		if len(msgs) > 0 {
+			msgs = msgs[:len(msgs)-1]
+		}
 	}
 
 	reqBody := ChatRequest{
-		Model:               l.cfg.LLMModel,
 		Messages:            msgs,
-		Temperature:         1.0,
+		Temperature:         0,
 		MaxCompletionTokens: 1024,
 		TopP:                1.0,
 		Stream:              false,
-		Stop:                nil,
+		Stop:                []string{"ERROR"},
+	}
+
+	if lang == "en" {
+		reqBody.Model = l.cfg.LLMModel
+	} else {
+		reqBody.Model = l.cfg.ArabicLLMModel
 	}
 
 	payload, err := json.Marshal(reqBody)
@@ -75,21 +113,25 @@ func (l *LLMClient) Chat(ctx context.Context, messages []dto.Message, chunks []s
 	return CallGroqAPI(ctx, l.cfg, payload)
 }
 
-func (l *LLMClient) ExtractText(ctx context.Context, encodedFile string) (*ExtractTextResponse, error) {
+func (l *LLMClient) ExtractText(ctx context.Context, encodedFile string, isText bool) (*ExtractTextResponse, error) {
 	textBlock := ExtractTextContentBlock{
 		Type: "text",
 		Text: EXTRACT_SYSTEM_PROMPT,
 	}
 
-	imageBlock := ExtractTextContentBlock{
-		Type: "image_url",
-		ImageURL: &ImageBlock{
+	dataBlock := ExtractTextContentBlock{}
+	if isText {
+		dataBlock.Type = "text"
+		dataBlock.Text = encodedFile
+	} else {
+		dataBlock.Type = "image_url"
+		dataBlock.ImageURL = &ImageBlock{
 			URL: encodedFile,
-		},
+		}
 	}
 
 	msgs := []ExtractTextMessageBlock{
-		{Role: "user", Content: []ExtractTextContentBlock{textBlock, imageBlock}},
+		{Role: "user", Content: []ExtractTextContentBlock{textBlock, dataBlock}},
 	}
 
 	reqBody := ExtractTextRequest{
