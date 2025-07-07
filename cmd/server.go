@@ -2,7 +2,6 @@ package main
 
 import (
 	"log"
-	"patient-chatbot/internal/client/embedding"
 	"patient-chatbot/internal/client/llm"
 	"patient-chatbot/internal/client/vectordb"
 	"patient-chatbot/internal/config"
@@ -22,13 +21,12 @@ type Server struct {
 
 func NewServer(cfg *config.Config) *Server {
 	llmClient := llm.NewLLMClient(cfg)
-	embeddingClient := embedding.NewEmbeddingClient(cfg)
 	vectordbClient, err := vectordb.NewVectordbClient(cfg)
 	if err != nil {
 		log.Fatalf("Failed to create vectordb client: %v", err)
 	}
 	repository := repository.NewRepository(cfg.DBURL)
-	chatService := service.NewService(cfg, llmClient, embeddingClient, vectordbClient, repository)
+	chatService := service.NewService(cfg, llmClient, vectordbClient, repository)
 	h := handler.NewHandler(chatService)
 
 	r := gin.Default()
