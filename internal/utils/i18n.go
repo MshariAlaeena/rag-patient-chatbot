@@ -3,6 +3,7 @@ package utils
 import (
 	"encoding/json"
 	"path/filepath"
+	"patient-chatbot/internal/middleware"
 
 	"github.com/gin-gonic/gin"
 	"github.com/nicksnyder/go-i18n/v2/i18n"
@@ -21,7 +22,7 @@ func Init() {
 }
 
 func Localize(c *gin.Context, key string) string {
-	lang := c.GetString("locale")
+	lang := middleware.GetLang(c)
 	localizer := i18n.NewLocalizer(Bundle, lang)
 	msg, _ := localizer.Localize(&i18n.LocalizeConfig{MessageID: key})
 	return msg

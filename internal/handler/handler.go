@@ -1,8 +1,8 @@
 package handler
 
 import (
+	"patient-chatbot/internal/middleware"
 	"patient-chatbot/internal/service"
-
 	"patient-chatbot/internal/utils"
 
 	"github.com/gin-gonic/gin"
@@ -27,7 +27,8 @@ func (h *Handler) HandleChat(c *gin.Context) {
 		return
 	}
 
-	data, err := h.chatService.Chat(c.Request.Context(), request.Messages)
+	lang := middleware.GetLang(c)
+	data, err := h.chatService.Chat(c.Request.Context(), request.Messages, lang)
 	if err != nil {
 		c.JSON(500, NewResponse(nil, utils.Localize(c, "an_error_occurred_while_processing_your_request")))
 		return
