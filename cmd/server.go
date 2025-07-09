@@ -1,11 +1,11 @@
 package main
 
 import (
-	"log"
 	"patient-chatbot/internal/client/llm"
 	"patient-chatbot/internal/client/vectordb"
 	"patient-chatbot/internal/config"
 	"patient-chatbot/internal/handler"
+	logger "patient-chatbot/internal/log"
 	"patient-chatbot/internal/middleware"
 	"patient-chatbot/internal/repository"
 	"patient-chatbot/internal/service"
@@ -13,6 +13,7 @@ import (
 
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
+	"github.com/rs/zerolog/log"
 )
 
 type Server struct {
@@ -20,19 +21,25 @@ type Server struct {
 }
 
 func NewServer(cfg *config.Config) *Server {
+	r := gin.New()
+
+	r.Use(middleware.LocaleMiddleware(utils.Bundle))
+	r.Use(middleware.RequestID())
+
+	r.Use(gin.Recovery())
+	r.Use(cors.Default())
+
+	r.Use(logger.Init())
+
 	llmClient := llm.NewLLMClient(cfg)
 	vectordbClient, err := vectordb.NewVectordbClient(cfg)
 	if err != nil {
-		log.Fatalf("Failed to create vectordb client: %v", err)
+		log.Error().Msg("Failed to create vectordb client: " + err.Error())
 	}
 	repository := repository.NewRepository(cfg.DBURL)
 	chatService := service.NewService(cfg, llmClient, vectordbClient, repository)
 	h := handler.NewHandler(chatService)
 
-	r := gin.Default()
-
-	r.Use(cors.Default())
-	r.Use(middleware.LocaleMiddleware(utils.Bundle))
 	RegisterRoutes(r, h)
 
 	return &Server{router: r}

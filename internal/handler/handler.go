@@ -6,6 +6,7 @@ import (
 	"patient-chatbot/internal/utils"
 
 	"github.com/gin-gonic/gin"
+	"github.com/rs/zerolog/log"
 )
 
 type Handler struct {
@@ -30,6 +31,7 @@ func (h *Handler) HandleChat(c *gin.Context) {
 	lang := middleware.GetLang(c)
 	data, err := h.chatService.Chat(c.Request.Context(), request.Messages, lang)
 	if err != nil {
+		log.Error().Msg("error: " + err.Error())
 		c.JSON(500, NewResponse(nil, utils.Localize(c, "an_error_occurred_while_processing_your_request")))
 		return
 	}
@@ -46,6 +48,7 @@ func (h *Handler) HandleUpload(c *gin.Context) {
 
 	err := h.chatService.Upload(c.Request.Context(), request.File)
 	if err != nil {
+		log.Error().Msg("error: " + err.Error())
 		c.JSON(500, NewResponse(nil, err.Error()))
 		return
 	}
@@ -62,6 +65,7 @@ func (h *Handler) HandleGetDocuments(c *gin.Context) {
 
 	documents, total, err := h.chatService.GetDocuments(c.Request.Context(), request.Page, request.PageSize)
 	if err != nil {
+		log.Error().Msg("error: " + err.Error())
 		c.JSON(500, NewResponse(nil, utils.Localize(c, "an_error_occurred_while_processing_your_request")))
 		return
 	}
@@ -96,6 +100,7 @@ func (h *Handler) HandleDeleteDocument(c *gin.Context) {
 	id := c.Param("id")
 	err := h.chatService.DeleteDocument(c.Request.Context(), id)
 	if err != nil {
+		log.Error().Msg("error: " + err.Error())
 		c.JSON(500, NewResponse(nil, utils.Localize(c, "an_error_occurred_while_processing_your_request")))
 		return
 	}
@@ -106,6 +111,7 @@ func (h *Handler) HandleDeleteContent(c *gin.Context) {
 	id := c.Param("id")
 	err := h.chatService.DeleteChunk(c.Request.Context(), id)
 	if err != nil {
+		log.Error().Msg("error: " + err.Error())
 		c.JSON(500, NewResponse(nil, utils.Localize(c, "an_error_occurred_while_processing_your_request")))
 		return
 	}
