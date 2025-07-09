@@ -2,9 +2,9 @@ package repository
 
 import (
 	"context"
-	"log"
 
 	"github.com/google/uuid"
+	"github.com/rs/zerolog/log"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 )
@@ -16,7 +16,7 @@ type Repository struct {
 func NewRepository(dbURL string) *Repository {
 	db, err := gorm.Open(postgres.Open(dbURL), &gorm.Config{})
 	if err != nil {
-		log.Fatalf("Failed to connect to database: %v", err)
+		log.Error().Msg("Failed to connect to database: " + err.Error())
 	}
 
 	err = db.AutoMigrate(
@@ -25,7 +25,7 @@ func NewRepository(dbURL string) *Repository {
 		&Message{},
 	)
 	if err != nil {
-		log.Fatalf("migration failed: %v", err)
+		log.Error().Msg("migration failed: " + err.Error())
 	}
 	return &Repository{db: db}
 }
