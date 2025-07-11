@@ -114,7 +114,7 @@ func (l *LLMClient) Chat(ctx context.Context, messages []dto.Message, chunks []s
 }
 
 func (l *LLMClient) ExtractText(ctx context.Context, encodedFile string, isText bool) (*ExtractTextResponse, error) {
-	textBlock := ExtractTextContentBlock{
+	systemPromptBlock := ExtractTextContentBlock{
 		Type: "text",
 		Text: EXTRACT_SYSTEM_PROMPT,
 	}
@@ -131,7 +131,7 @@ func (l *LLMClient) ExtractText(ctx context.Context, encodedFile string, isText 
 	}
 
 	msgs := []ExtractTextMessageBlock{
-		{Role: "user", Content: []ExtractTextContentBlock{textBlock, dataBlock}},
+		{Role: "user", Content: []ExtractTextContentBlock{systemPromptBlock, dataBlock}},
 	}
 
 	reqBody := ExtractTextRequest{
