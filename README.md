@@ -2,6 +2,8 @@
 
 A full-stack **patient chatbot** application backed by Go (Gin) and Next.js.
 
+<img src="powered_by_groq.svg" style="width: 300px; height: auto;">
+
 ## 🚀 Project Overview
 
 * **Backend**
@@ -13,6 +15,23 @@ A full-stack **patient chatbot** application backed by Go (Gin) and Next.js.
 
   * Next.js 13 app (App Router)
   * Tailwind CSS + shadcn/ui components
+
+## 🛠️ Features
+
+- **Conversational AI**  
+  – Context-aware patient triage and guidance  
+- **Vector Search**  
+  – Pinecone for fast semantic retrieval of medical knowledge  
+- **Multimodal Input**  
+  – Support for text, images, and structured prompts  
+- **User Dashboard**  
+  – Personalized quitting journey:  
+    - Progress tracker & streaks  
+    - Upcoming reminders & scheduled tips  
+    - Motivational quotes & achievement badges  
+    - Session history & insights 
+- **Extensible Architecture**  
+  – Plugin-ready design for adding new LLM models or data sources  
 
 ## 📁 Repo Layout
 
@@ -39,6 +58,7 @@ A full-stack **patient chatbot** application backed by Go (Gin) and Next.js.
 
 * Go 1.20+
 * Node.js 18+ & npm (or pnpm/yarn)
+* **Groq API Key** (free at [console.groq.com](https://console.groq.com))
 * Docker & Docker Compose (optional)
 * GNU Make
 
@@ -142,3 +162,6 @@ You can split into `docker-compose.backend.yml` and `docker-compose.frontend.yml
 * `make clean`       – wipe artifacts
 
 Drill down into each subfolder for more specialized targets (`make backend.build`, `make frontend.dev`, etc.).
+
+### Credits
+This app was developed by Mshari Alaeena at Groq.
