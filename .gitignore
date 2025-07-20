@@ -1,7 +1,18 @@
-# compiled executables
+.DS_Store
+Thumbs.db
+
+.vscode/
+.idea/
+
+.env*
+!.env.example
+
+dist/
+build/
+
+*.log
+
 *.exe
 *.dll
 *.so
 *.dylib
-
-.env

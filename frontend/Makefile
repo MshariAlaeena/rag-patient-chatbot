@@ -1,19 +1,13 @@
-# RAG Patient Chatbot - Local Development Setup
-# This Makefile handles all dependencies and setup for local development
-
 .PHONY: help install setup dev build clean check-deps install-node install-deps copy-env health-check
 
-# Default target
 .DEFAULT_GOAL := help
 
-# Colors for output
 RED := \033[0;31m
 GREEN := \033[0;32m
 YELLOW := \033[1;33m
 BLUE := \033[0;34m
-NC := \033[0m # No Color
+NC := \033[0m
 
-# Project configuration
 PROJECT_NAME := rag-patient-chatbot
 NODE_VERSION := 18
 PACKAGE_MANAGER := npm

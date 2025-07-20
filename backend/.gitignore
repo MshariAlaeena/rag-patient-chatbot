@@ -1,7 +1,20 @@
-# compiled executables
-*.exe
-*.dll
-*.so
-*.dylib
+/bin/
+/build/
+/*.exe
+/*.dll
+/*.so
+/*.dylib
+/vendor/
 
-.env
+coverage.out
+
+.env*
+!.env.example
+
+*.log
+
+.vscode/
+.idea/
+
+.DS_Store
+Thumbs.db
