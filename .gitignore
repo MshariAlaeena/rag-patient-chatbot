@@ -1,0 +1,7 @@
+# compiled executables
+*.exe
+*.dll
+*.so
+*.dylib
+
+.env
