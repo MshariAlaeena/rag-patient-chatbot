@@ -1,7 +1,7 @@
 export const translations = {
   en: {
     // App branding
-    appName: "Badael AI Quitting Coach",
+    appName: "AI Quitting Coach",
     tagline: "Your AI-powered companion to quit smoking",
 
     // Navigation
@@ -72,7 +72,7 @@ export const translations = {
     legal: "Legal & Disclaimer",
 
     // Footer
-    aboutBadael: "About Badael",
+    aboutAIQuittingCoach: "About AI Quitting Coach",
     privacyDisclaimer: "Privacy & Disclaimer",
     contact: "Contact",
 
@@ -91,7 +91,7 @@ export const translations = {
   },
   ar: {
     // App branding
-    appName: "مدرب بدائل الذكي للإقلاع عن التدخين",
+    appName: "مدرب  الذكي للإقلاع عن التدخين",
     tagline: "رفيقك المدعوم بالذكاء الاصطناعي للإقلاع عن التدخين",
 
     // Navigation
@@ -162,7 +162,7 @@ export const translations = {
     legal: "القانونية والإخلاء",
 
     // Footer
-    aboutBadael: "عن بدائل",
+    aboutAIQuittingCoach: "عن AI Quitting Coach",
     privacyDisclaimer: "الخصوصية والإخلاء",
     contact: "اتصل بنا",
 

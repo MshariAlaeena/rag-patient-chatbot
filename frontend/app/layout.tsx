@@ -20,10 +20,10 @@ const poppins = Poppins({
 })
 
 export const metadata: Metadata = {
-  title: "Badael AI Quitting Coach",
+  title: "AI Quitting Coach",
   description: "Your AI-powered companion to quit smoking with personalized support and evidence-based strategies",
-  keywords: ["quit smoking", "AI coach", "health", "wellness", "Badael"],
-  authors: [{ name: "Badael Company" }],
+  keywords: ["quit smoking", "AI coach", "health", "wellness", "AI Quitting Coach"],
+  authors: [{ name: "AI Quitting Coach" }],
     generator: 'v0.dev'
 }
 

@@ -22,7 +22,7 @@ export function Footer() {
           {/* Links */}
           <div className="flex flex-wrap justify-center md:justify-start gap-6 text-sm text-gray-600">
             <a href="#" className="hover:text-primary transition-colors">
-              {t("aboutBadael")}
+              {t("aboutAiQuittingCoach")}
             </a>
             <a href="#" className="hover:text-primary transition-colors">
               {t("privacyDisclaimer")}

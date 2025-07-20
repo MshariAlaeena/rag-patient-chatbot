@@ -18,25 +18,22 @@ export function Header({ pageTitle }: HeaderProps) {
     <header className="bg-primary text-white shadow-lg">
       <div className="container mx-auto px-4 py-4">
         <div className="flex items-center justify-between">
-          {/* Left: Badael Logo */}
           <div className="flex items-center gap-3">
             <div className="w-10 h-10 bg-white rounded-lg flex items-center justify-center">
               <span className="text-primary font-bold text-lg">B</span>
             </div>
             <div>
-              <h1 className="text-lg font-semibold text-white">Badael</h1>
+              <h1 className="text-lg font-semibold text-white">AI Quitting Coach</h1>
               <p className="text-xs text-white/80">Company</p>
             </div>
           </div>
 
-          {/* Center: Page Title */}
           {pageTitle && (
             <div className="hidden md:block">
               <h2 className="text-xl font-semibold">{pageTitle}</h2>
             </div>
           )}
 
-          {/* Right: Language Toggle + User Avatar */}
           <div className="flex items-center gap-4">
             <LanguageSwitcher />
 
