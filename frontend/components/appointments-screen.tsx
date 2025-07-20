@@ -73,7 +73,6 @@ export function AppointmentsScreen() {
   })
   const { toast } = useToast()
 
-  // Generate calendar days for current month
   const generateCalendarDays = () => {
     const year = selectedDate.getFullYear()
     const month = selectedDate.getMonth()
@@ -84,12 +83,10 @@ export function AppointmentsScreen() {
 
     const days = []
 
-    // Add empty cells for days before the first day of the month
     for (let i = 0; i < startingDayOfWeek; i++) {
       days.push(null)
     }
 
-    // Add days of the month
     for (let day = 1; day <= daysInMonth; day++) {
       days.push(new Date(year, month, day))
     }
@@ -172,7 +169,6 @@ export function AppointmentsScreen() {
 
   return (
     <div className="flex flex-col lg:flex-row h-screen bg-slate-50">
-      {/* Left Panel - Calendar */}
       <div className="w-full lg:w-2/3 p-4 lg:p-6 bg-white border-b lg:border-b-0 lg:border-r border-slate-200">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between mb-6 gap-4">
           <h1 className="text-xl lg:text-2xl font-semibold text-slate-900">Appointments</h1>
@@ -258,7 +254,6 @@ export function AppointmentsScreen() {
           </Dialog>
         </div>
 
-        {/* Calendar Header */}
         <div className="flex items-center justify-between mb-4">
           <h2 className="text-lg font-medium text-slate-900">
             {selectedDate.toLocaleDateString("en-US", { month: "long", year: "numeric" })}
@@ -281,7 +276,6 @@ export function AppointmentsScreen() {
           </div>
         </div>
 
-        {/* Calendar Grid */}
         <div className="grid grid-cols-7 gap-1 mb-2 text-xs sm:text-sm">
           {["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"].map((day) => (
             <div key={day} className="p-1 lg:p-2 text-center font-medium text-slate-600">
@@ -327,7 +321,6 @@ export function AppointmentsScreen() {
         </div>
       </div>
 
-      {/* Right Panel - Upcoming Appointments */}
       <div className="w-full lg:w-1/3 p-4 lg:p-6">
         <h2 className="text-lg lg:text-xl font-semibold text-slate-900 mb-4">Upcoming Appointments</h2>
         <ScrollArea className="h-96 lg:h-[calc(100vh-120px)]">

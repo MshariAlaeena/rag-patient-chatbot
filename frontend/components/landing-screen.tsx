@@ -17,12 +17,10 @@ export function LandingScreen({ onNavigate }: LandingScreenProps) {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-white">
-      {/* Header with Language Switcher - Always top right */}
       <div className="absolute top-4 right-4">
         <LanguageSwitcher />
       </div>
 
-      {/* Hero Section */}
       <div className="container mx-auto px-4 py-16">
         <div className={cn("text-center max-w-4xl mx-auto")}>
           <div className="mb-8">
@@ -33,7 +31,6 @@ export function LandingScreen({ onNavigate }: LandingScreenProps) {
             <p className="text-xl text-slate-600 mb-8 text-center">{t("landingSubtitle")}</p>
           </div>
 
-          {/* Primary CTAs */}
           <div className="flex flex-col sm:flex-row gap-4 justify-center mb-16">
             <Button
               size="lg"
@@ -54,7 +51,6 @@ export function LandingScreen({ onNavigate }: LandingScreenProps) {
             </Button>
           </div>
 
-          {/* Features Grid */}
           <div className="grid md:grid-cols-3 gap-8 mb-16">
             <div className="text-center p-6 bg-white rounded-xl shadow-sm border border-slate-100">
               <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center mx-auto mb-4">
@@ -81,7 +77,6 @@ export function LandingScreen({ onNavigate }: LandingScreenProps) {
         </div>
       </div>
 
-      {/* Footer Links */}
       <div className="border-t border-slate-200 bg-white">
         <div className="container mx-auto px-4 py-8">
           <div className="flex flex-col sm:flex-row justify-center items-center gap-6 text-sm text-slate-600">

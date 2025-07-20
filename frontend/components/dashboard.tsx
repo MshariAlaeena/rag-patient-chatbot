@@ -11,7 +11,6 @@ import { motion } from "framer-motion"
 import { apiClient, type DashboardResponse } from "@/lib/api"
 import { useToast } from "@/hooks/use-toast"
 
-// Import new components
 import { StreakCalendar } from "@/components/streak-calendar"
 import { ProgressChart } from "@/components/progress-chart"
 import { MilestoneTimeline } from "@/components/milestone-timeline"
@@ -33,7 +32,6 @@ export function Dashboard({ onNavigateToChat }: DashboardProps) {
   const [error, setError] = useState<string | null>(null)
   const hasLoadedRef = useRef<boolean>(false)
 
-  // Mock data for visualizations (keeping these for components that don't have real API yet)
   const mockProgressData = [
     { date: "2024-01-01", daysSmokeFree: 1, moneySaved: 30 },
     { date: "2024-01-02", daysSmokeFree: 2, moneySaved: 60 },
@@ -44,7 +42,6 @@ export function Dashboard({ onNavigateToChat }: DashboardProps) {
     { date: "2024-01-07", daysSmokeFree: 6, moneySaved: 180 },
   ]
 
-  // Load dashboard data on component mount - prevent duplicate calls
   const loadDashboardData = useCallback(async () => {
     if (hasLoadedRef.current) return
     hasLoadedRef.current = true
@@ -67,7 +64,6 @@ export function Dashboard({ onNavigateToChat }: DashboardProps) {
     }
   }, [toast])
 
-  // Refresh dashboard data (for when slips are reported)
   const refreshDashboardData = useCallback(async () => {
     try {
       const response = await apiClient.getDashboard()
@@ -118,7 +114,6 @@ export function Dashboard({ onNavigateToChat }: DashboardProps) {
 
   return (
     <div className="container mx-auto px-4 py-8 space-y-8">
-      {/* Hero Stats - Updated with new API response structure */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.3 }}>
           <Card className="bg-gradient-to-br from-primary to-primary-700 text-white">
@@ -198,7 +193,6 @@ export function Dashboard({ onNavigateToChat }: DashboardProps) {
         </div>
       </div>
 
-      {/* Main Content Tabs */}
       <Tabs defaultValue="overview" className="space-y-6">
         <TabsList className="grid w-full grid-cols-4">
           <TabsTrigger value="overview">Overview</TabsTrigger>
@@ -216,7 +210,6 @@ export function Dashboard({ onNavigateToChat }: DashboardProps) {
             <MilestoneTimeline daysSmokeFree={dashboardData.total_days_smoke_free} />
           </div>
 
-          {/* Recent Chat */}
           <Card>
             <CardHeader className="pb-2">
               <CardTitle className="text-lg flex items-center">
@@ -306,7 +299,6 @@ export function Dashboard({ onNavigateToChat }: DashboardProps) {
         </TabsContent>
       </Tabs>
 
-      {/* Refresh Button */}
       <div className="text-center">
         <Button
           variant="outline"

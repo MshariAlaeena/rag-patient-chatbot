@@ -3,7 +3,6 @@
 import { useTranslations } from "@/components/language-switcher"
 import { Linkedin } from "lucide-react"
 
-// Custom X (formerly Twitter) icon component
 function XIcon({ className }: { className?: string }) {
   return (
     <svg viewBox="0 0 24 24" className={className} fill="currentColor" aria-hidden="true">
@@ -47,9 +46,15 @@ export function Footer() {
           </div>
         </div>
 
-        {/* Copyright */}
-        <div className="mt-6 pt-6 border-t border-gray-200 text-center text-sm text-gray-500">
-          © 2025
+        <div className="mt-6 pt-6 border-t border-gray-200 text-center text-sm text-gray-500 flex flex-col items-center">
+          <div>© 2025</div>
+          <a href="https://groq.com" target="_blank" rel="noopener noreferrer">
+            <img
+              src="https://console.groq.com/powered-by-groq.svg"
+              alt="Powered by Groq for fast inference."
+              className="w-24 h-auto"
+            />
+          </a>
         </div>
       </div>
     </footer>

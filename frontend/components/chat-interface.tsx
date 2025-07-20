@@ -30,7 +30,6 @@ export function ChatInterface({ onBack }: ChatInterfaceProps) {
   const { t, currentLanguage } = useTranslations()
   const isRTL = currentLanguage === "ar"
 
-  // Initialize with a welcome message
   const [messages, setMessages] = useState<UIMessage[]>([
     {
       id: 1,
@@ -48,7 +47,6 @@ export function ChatInterface({ onBack }: ChatInterfaceProps) {
   const scrollAreaRef = useRef<HTMLDivElement>(null)
   const { toast } = useToast()
 
-  // Check API health on component mount
   useEffect(() => {
     const checkApiHealth = async () => {
       try {
@@ -63,7 +61,6 @@ export function ChatInterface({ onBack }: ChatInterfaceProps) {
     checkApiHealth()
   }, [])
 
-  // Scroll to bottom when messages change
   useEffect(() => {
     if (scrollAreaRef.current) {
       const scrollContainer = scrollAreaRef.current.querySelector("[data-radix-scroll-area-viewport]")
@@ -73,10 +70,9 @@ export function ChatInterface({ onBack }: ChatInterfaceProps) {
     }
   }, [messages])
 
-  // Convert UI messages to API format
   const convertToApiMessages = (uiMessages: UIMessage[]): ChatMessage[] => {
     return uiMessages
-      .filter((msg) => !msg.error) // Exclude error messages from conversation history
+      .filter((msg) => !msg.error)
       .map((msg) => ({
         role: msg.sender,
         content: msg.message,
@@ -100,11 +96,9 @@ export function ChatInterface({ onBack }: ChatInterfaceProps) {
     setIsTyping(true)
 
     try {
-      // Get current conversation history including the new user message
       const currentMessages = [...messages, userMessage]
       const apiMessages = convertToApiMessages(currentMessages)
 
-      // Call the actual API
       const response = await apiClient.chat(apiMessages)
 
       const assistantMessage: UIMessage = {
@@ -121,7 +115,6 @@ export function ChatInterface({ onBack }: ChatInterfaceProps) {
       console.error("Chat API error:", error)
       setIsConnected(false)
 
-      // Add error message
       const errorMessage: UIMessage = {
         id: Date.now() + 1,
         message:
@@ -162,7 +155,6 @@ export function ChatInterface({ onBack }: ChatInterfaceProps) {
 
   return (
     <div className="flex flex-col h-[calc(100vh-64px-80px)]">
-      {/* Chat Header */}
       <div className="bg-white border-b p-4 flex items-center justify-between">
         <Button variant="ghost" size="sm" onClick={onBack} className="flex items-center gap-1">
           <ArrowLeft className="w-4 h-4" />
@@ -179,10 +171,9 @@ export function ChatInterface({ onBack }: ChatInterfaceProps) {
             <span className="text-xs text-slate-500">{getConnectionStatus()}</span>
           </div>
         </div>
-        <div className="w-20"></div> {/* Spacer for alignment */}
+        <div className="w-20"></div>
       </div>
 
-      {/* Messages */}
       <ScrollArea ref={scrollAreaRef} className="flex-1 p-4">
         <div className="space-y-4 max-w-3xl mx-auto">
           <AnimatePresence>
@@ -196,7 +187,6 @@ export function ChatInterface({ onBack }: ChatInterfaceProps) {
                 className={`flex ${message.sender === "user" ? "justify-end" : "justify-start"}`}
               >
                 <div className="flex items-start gap-2 max-w-[80%]">
-                  {/* Assistant avatar */}
                   {message.sender === "assistant" && (
                     <div
                       className={`w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 mt-1 ${
@@ -240,7 +230,6 @@ export function ChatInterface({ onBack }: ChatInterfaceProps) {
               </motion.div>
             ))}
 
-            {/* Typing indicator */}
             {isTyping && (
               <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="flex justify-start">
                 <div className="flex items-start gap-2 max-w-[80%]">
@@ -267,7 +256,6 @@ export function ChatInterface({ onBack }: ChatInterfaceProps) {
         </div>
       </ScrollArea>
 
-      {/* Quick Replies */}
       <div className="bg-white border-t p-2 overflow-x-auto">
         <div className="flex gap-2 pb-1">
           {quickReplies.map((reply, index) => (
@@ -285,7 +273,6 @@ export function ChatInterface({ onBack }: ChatInterfaceProps) {
         </div>
       </div>
 
-      {/* Input Area */}
       <div className="bg-white border-t p-4">
         <div className="max-w-3xl mx-auto">
           <div className="flex gap-2">
@@ -314,7 +301,6 @@ export function ChatInterface({ onBack }: ChatInterfaceProps) {
         </div>
       </div>
 
-      {/* Persistent Toolbar */}
       <div className="bg-primary text-white p-3 flex justify-around">
         <Button variant="ghost" className="text-white hover:bg-white/10">
           <HelpCircle className="w-5 h-5" />

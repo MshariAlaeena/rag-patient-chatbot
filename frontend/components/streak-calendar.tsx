@@ -73,7 +73,7 @@ export function StreakCalendar({ currentStreak, onSlipReported }: StreakCalendar
     for (let day = 1; day <= daysInMonth; day++) {
       const date = new Date(year, month, day)
       const dateString = date.toISOString().split("T")[0]
-      const status = calendarData[dateString] // This will be undefined if not in API response
+      const status = calendarData[dateString]
       const today = new Date()
       today.setHours(0, 0, 0, 0)
       const compareDate = new Date(date)
@@ -84,7 +84,7 @@ export function StreakCalendar({ currentStreak, onSlipReported }: StreakCalendar
       days.push({
         date,
         day,
-        status, // Keep as undefined if not in API response
+        status,
         isToday,
         isFuture,
         dateString,
@@ -153,7 +153,6 @@ export function StreakCalendar({ currentStreak, onSlipReported }: StreakCalendar
       case "UNKNOWN":
         return `${baseStyle} bg-gray-100 text-gray-600 border-gray-300 hover:bg-gray-200`
       default:
-        // For days with no data (undefined status)
         return `${baseStyle} bg-slate-100 hover:bg-slate-200`
     }
   }
@@ -161,7 +160,6 @@ export function StreakCalendar({ currentStreak, onSlipReported }: StreakCalendar
   const handleDayClick = (day: any) => {
     if (day.isFuture || day.status === "SLIP") return
 
-    // Allow reporting slips for smoke-free days, unknown days, or today
     if (day.status === "SMOKE_FREE" || day.status === "UNKNOWN" || day.status === undefined || day.isToday) {
       if (confirm(`Report a slip for ${day.date.toLocaleDateString()}?`)) {
         handleReportSlip(day.dateString)

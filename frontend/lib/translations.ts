@@ -1,16 +1,13 @@
 export const translations = {
   en: {
-    // App branding
     appName: "AI Quitting Coach",
     tagline: "Your AI-powered companion to quit smoking",
 
-    // Navigation
     dashboard: "Dashboard",
     chat: "Chat",
     progress: "Progress",
     settings: "Settings",
 
-    // Onboarding
     welcomeTitle: "Ready to Quit Smoking?",
     welcomeSubtitle: "Join thousands who've successfully quit with AI-powered support",
     getStarted: "Get Started",
@@ -29,7 +26,6 @@ export const translations = {
     goalConfirmation: "Goal Confirmation",
     confirmAndStart: "Confirm & Start",
 
-    // Dashboard
     daysSmokeFree: "Days Smoke-Free",
     moneySaved: "Money Saved",
     latestMilestone: "Latest Milestone",
@@ -40,13 +36,11 @@ export const translations = {
     recentChat: "Recent Chat",
     continueChat: "Continue Chat",
 
-    // Chat
     typeMessage: "Type your message...",
     send: "Send",
     helpNow: "Help Now",
     urgencyDetected: "High urgency detected",
 
-    // Craving Logger
     cravingIntensity: "Craving Intensity",
     howStrongCraving: "How strong is your craving?",
     additionalNotes: "Additional Notes",
@@ -56,14 +50,12 @@ export const translations = {
     strategyRecommended: "Strategy Recommended",
     markAsDone: "Mark as Done",
 
-    // Motivators & Tips
     dailyMotivator: "Daily Motivator",
     favoriteMotivators: "Favorite Motivators",
     randomTip: "Random Tip",
     tryNow: "Try Now",
     addToFavorites: "Add to Favorites",
 
-    // Settings
     profileSettings: "Profile Settings",
     preferences: "Preferences",
     language: "Language",
@@ -71,12 +63,10 @@ export const translations = {
     notifications: "Notifications",
     legal: "Legal & Disclaimer",
 
-    // Footer
     aboutAIQuittingCoach: "About AI Quitting Coach",
     privacyDisclaimer: "Privacy & Disclaimer",
     contact: "Contact",
 
-    // Common
     loading: "Loading...",
     error: "Error",
     success: "Success",
@@ -85,22 +75,18 @@ export const translations = {
     edit: "Edit",
     delete: "Delete",
 
-    // Language toggle
     arabic: "العربية",
     english: "English",
   },
   ar: {
-    // App branding
     appName: "مدرب  الذكي للإقلاع عن التدخين",
     tagline: "رفيقك المدعوم بالذكاء الاصطناعي للإقلاع عن التدخين",
 
-    // Navigation
     dashboard: "لوحة التحكم",
     chat: "المحادثة",
     progress: "التقدم",
     settings: "الإعدادات",
 
-    // Onboarding
     welcomeTitle: "مستعد للإقلاع عن التدخين؟",
     welcomeSubtitle: "انضم إلى الآلاف الذين أقلعوا بنجاح بدعم الذكاء الاصطناعي",
     getStarted: "ابدأ الآن",
@@ -119,7 +105,6 @@ export const translations = {
     goalConfirmation: "تأكيد الهدف",
     confirmAndStart: "تأكيد والبدء",
 
-    // Dashboard
     daysSmokeFree: "أيام بدون تدخين",
     moneySaved: "المال المدخر",
     latestMilestone: "آخر إنجاز",
@@ -130,13 +115,11 @@ export const translations = {
     recentChat: "المحادثة الأخيرة",
     continueChat: "متابعة المحادثة",
 
-    // Chat
     typeMessage: "اكتب رسالتك...",
     send: "إرسال",
     helpNow: "مساعدة فورية",
     urgencyDetected: "تم اكتشاف حالة طارئة",
 
-    // Craving Logger
     cravingIntensity: "شدة الرغبة",
     howStrongCraving: "ما مدى قوة رغبتك؟",
     additionalNotes: "ملاحظات إضافية",
@@ -146,14 +129,12 @@ export const translations = {
     strategyRecommended: "استراتيجية موصى بها",
     markAsDone: "تحديد كمكتمل",
 
-    // Motivators & Tips
     dailyMotivator: "المحفز اليومي",
     favoriteMotivators: "المحفزات المفضلة",
     randomTip: "نصيحة عشوائية",
     tryNow: "جرب الآن",
     addToFavorites: "إضافة للمفضلة",
 
-    // Settings
     profileSettings: "إعدادات الملف الشخصي",
     preferences: "التفضيلات",
     language: "اللغة",
@@ -161,12 +142,10 @@ export const translations = {
     notifications: "الإشعارات",
     legal: "القانونية والإخلاء",
 
-    // Footer
     aboutAIQuittingCoach: "عن AI Quitting Coach",
     privacyDisclaimer: "الخصوصية والإخلاء",
     contact: "اتصل بنا",
 
-    // Common
     loading: "جاري التحميل...",
     error: "خطأ",
     success: "نجح",
@@ -175,7 +154,6 @@ export const translations = {
     edit: "تعديل",
     delete: "حذف",
 
-    // Language toggle
     arabic: "العربية",
     english: "English",
   },

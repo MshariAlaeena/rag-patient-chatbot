@@ -56,7 +56,7 @@ export function CravingLogger() {
 
   const handleSubmit = () => {
     const strategy = getRandomStrategy()
-    setSelectedStrategy(strategy) // Store the selected strategy
+    setSelectedStrategy(strategy)
     setShowStrategy(true)
 
     toast({
@@ -68,7 +68,7 @@ export function CravingLogger() {
   const handleStrategyComplete = () => {
     setIsOpen(false)
     setShowStrategy(false)
-    setSelectedStrategy(null) // Clear the selected strategy
+    setSelectedStrategy(null)
     setIntensity([5])
     setNotes("")
 

@@ -16,7 +16,6 @@ interface CravingAnalyticsProps {
 }
 
 export function CravingAnalytics({ data }: CravingAnalyticsProps) {
-  // Mock data for demonstration
   const mockData: CravingData[] = [
     { hour: "6 AM", count: 2, intensity: 4 },
     { hour: "8 AM", count: 5, intensity: 6 },
@@ -34,7 +33,7 @@ export function CravingAnalytics({ data }: CravingAnalyticsProps) {
   const getBarColor = (intensity: number) => {
     if (intensity <= 3) return "#10b981" // green
     if (intensity <= 6) return "#f59e0b" // yellow
-    return "#ef4444" // red
+    return "#ef4444" // red, i guess :)
   }
 
   const peakHour = chartData.reduce((prev, current) => (prev.count > current.count ? prev : current))

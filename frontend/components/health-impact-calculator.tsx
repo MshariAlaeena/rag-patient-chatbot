@@ -10,15 +10,14 @@ interface HealthImpactProps {
 }
 
 export function HealthImpactCalculator({ daysSmokeFree, cigarettesPerDay = 20 }: HealthImpactProps) {
-  // Health calculations based on medical research
   const calculateHealthMetrics = () => {
     const cigarettesAvoided = daysSmokeFree * cigarettesPerDay
-    const minutesOfLifeRegained = cigarettesAvoided * 11 // Each cigarette = 11 minutes of life
+    const minutesOfLifeRegained = cigarettesAvoided * 11
     const hoursRegained = Math.floor(minutesOfLifeRegained / 60)
-    const carbonMonoxideReduction = Math.min(100, (daysSmokeFree / 1) * 100) // Normalizes in 1 day
-    const lungCapacityImprovement = Math.min(30, (daysSmokeFree / 30) * 30) // 30% improvement over 30 days
-    const circulationImprovement = Math.min(100, (daysSmokeFree / 14) * 100) // Improves over 2 weeks
-    const tasteSmellImprovement = Math.min(100, (daysSmokeFree / 7) * 100) // Improves over 1 week
+    const carbonMonoxideReduction = Math.min(100, (daysSmokeFree / 1) * 100)
+    const lungCapacityImprovement = Math.min(30, (daysSmokeFree / 30) * 30)
+    const circulationImprovement = Math.min(100, (daysSmokeFree / 14) * 100)
+    const tasteSmellImprovement = Math.min(100, (daysSmokeFree / 7) * 100)
 
     return {
       cigarettesAvoided,
@@ -76,7 +75,6 @@ export function HealthImpactCalculator({ daysSmokeFree, cigarettesPerDay = 20 }:
         </CardTitle>
       </CardHeader>
       <CardContent className="space-y-6">
-        {/* Key Stats */}
         <div className="grid grid-cols-2 gap-4">
           <div className="text-center p-4 bg-gradient-to-br from-green-50 to-emerald-50 rounded-lg border border-green-200">
             <div className="text-2xl font-bold text-green-700">{metrics.cigarettesAvoided.toLocaleString()}</div>
@@ -88,7 +86,6 @@ export function HealthImpactCalculator({ daysSmokeFree, cigarettesPerDay = 20 }:
           </div>
         </div>
 
-        {/* Health Indicators */}
         <div className="space-y-4">
           <h3 className="font-medium text-slate-900">Health Recovery Progress</h3>
           {healthIndicators.map((indicator) => {
@@ -113,7 +110,6 @@ export function HealthImpactCalculator({ daysSmokeFree, cigarettesPerDay = 20 }:
           })}
         </div>
 
-        {/* Motivational Message */}
         <div className="p-4 bg-gradient-to-r from-primary/10 to-accent/10 rounded-lg border border-primary/20">
           <p className="text-sm text-primary font-medium">
             🎉 Amazing progress! Your body is healing more every day you stay smoke-free.

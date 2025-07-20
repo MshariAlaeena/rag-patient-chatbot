@@ -66,7 +66,7 @@ export function AchievementsPanel({ daysSmokeFree, moneySaved }: AchievementsPan
       title: "Health Hero",
       description: "Unlock 3 health milestones",
       icon: Heart,
-      unlocked: daysSmokeFree >= 7, // Simplified logic
+      unlocked: daysSmokeFree >= 7,
       progress: Math.min(Math.floor(daysSmokeFree / 2), 3),
       maxProgress: 3,
       category: "health",

@@ -38,7 +38,6 @@ export function ChatScreen() {
   const inputRef = useRef<HTMLInputElement>(null)
   const healthCheckRef = useRef<boolean>(false)
 
-  // Update initial message when language changes
   useEffect(() => {
     setMessages([
       {
@@ -50,7 +49,6 @@ export function ChatScreen() {
     ])
   }, [currentLanguage, t])
 
-  // Check API health on component mount - prevent duplicate calls
   const checkApiHealth = useCallback(async () => {
     if (healthCheckRef.current) return
     healthCheckRef.current = true
@@ -68,7 +66,6 @@ export function ChatScreen() {
     checkApiHealth()
   }, [checkApiHealth])
 
-  // Auto-focus input on component mount
   useEffect(() => {
     if (inputRef.current) {
       inputRef.current.focus()
@@ -88,10 +85,9 @@ export function ChatScreen() {
     scrollToBottom()
   }, [messages])
 
-  // Convert UI messages to API format
   const convertToApiMessages = (uiMessages: Message[]): ChatMessage[] => {
     return uiMessages
-      .filter((msg) => !msg.error) // Exclude error messages from conversation history
+      .filter((msg) => !msg.error)
       .map((msg) => ({
         role: msg.sender,
         content: msg.content,
@@ -112,7 +108,6 @@ export function ChatScreen() {
     const currentInput = inputValue
     setInputValue("")
 
-    // Re-focus input after sending message
     setTimeout(() => {
       if (inputRef.current) {
         inputRef.current.focus()
@@ -122,11 +117,9 @@ export function ChatScreen() {
     setIsLoading(true)
 
     try {
-      // Get current conversation history including the new user message
       const currentMessages = [...messages, userMessage]
       const apiMessages = convertToApiMessages(currentMessages)
 
-      // Call the API with conversation history
       const response = await apiClient.chat(apiMessages)
 
       const assistantMessage: Message = {
@@ -142,7 +135,6 @@ export function ChatScreen() {
       console.error("Chat API error:", error)
       setIsConnected(false)
 
-      // Add error message
       const errorMessage: Message = {
         id: (Date.now() + 1).toString(),
         content: t("connectionError"),
@@ -197,7 +189,6 @@ export function ChatScreen() {
         </div>
       </div>
 
-      {/* Chat Messages */}
       <ScrollArea ref={scrollAreaRef} className="flex-1 p-4 lg:p-6">
         <div className="space-y-4 max-w-4xl mx-auto">
           {messages.map((message) => (
@@ -205,11 +196,9 @@ export function ChatScreen() {
               key={message.id}
               className={cn(
                 "flex gap-3",
-                // Keep consistent layout: assistant always left, user always right
                 message.sender === "user" ? "justify-end" : "justify-start",
               )}
             >
-              {/* Assistant avatar - always on the left */}
               {message.sender === "assistant" && (
                 <div
                   className={cn(
@@ -225,7 +214,6 @@ export function ChatScreen() {
                 </div>
               )}
 
-              {/* Message bubble */}
               <div
                 className={cn(
                   "max-w-[70%] rounded-2xl px-4 py-3",
@@ -248,7 +236,6 @@ export function ChatScreen() {
                 </p>
               </div>
 
-              {/* User avatar - always on the right */}
               {message.sender === "user" && (
                 <div className="w-8 h-8 bg-blue-500 rounded-full flex items-center justify-center flex-shrink-0">
                   <User className="w-4 h-4 text-white" />
@@ -257,7 +244,6 @@ export function ChatScreen() {
             </div>
           ))}
 
-          {/* Loading indicator */}
           {isLoading && (
             <div className="flex gap-3 justify-start">
               <div className="w-8 h-8 bg-slate-100 rounded-full flex items-center justify-center flex-shrink-0">
@@ -294,7 +280,6 @@ export function ChatScreen() {
                 placeholder={t("healthQuestionPlaceholder")}
                 className={cn(
                   "py-2 lg:py-3 text-sm",
-                  // Consistent padding for both languages, with proper spacing for attachment icon
                   isRTL ? "pr-12 pl-3 text-right" : "pl-3 pr-12 text-left",
                 )}
                 disabled={isLoading || !isConnected}
@@ -304,7 +289,6 @@ export function ChatScreen() {
                 variant="ghost"
                 className={cn(
                   "absolute top-1/2 -translate-y-1/2 h-8 w-8 p-0",
-                  // Keep attachment icon on the right for both languages
                   "right-1",
                 )}
               >

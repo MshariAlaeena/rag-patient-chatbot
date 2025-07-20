@@ -66,7 +66,6 @@ export function GoalConfirmation({ profile, onConfirm }: GoalConfirmationProps) 
               </div>
             </div>
 
-            {/* Benefits */}
             <div className="space-y-2 pt-4">
               <h3 className="font-medium text-gray-700">Your Benefits</h3>
               <div className="space-y-2">
@@ -85,12 +84,10 @@ export function GoalConfirmation({ profile, onConfirm }: GoalConfirmationProps) 
               </div>
             </div>
 
-            {/* Confirm Button */}
             <Button onClick={onConfirm} className="w-full bg-primary hover:bg-primary-600 mt-6">
               {t("confirmAndStart")}
             </Button>
 
-            {/* Step Indicator */}
             <div className="text-sm text-gray-500 text-center">2 of 2</div>
           </div>
         </CardContent>

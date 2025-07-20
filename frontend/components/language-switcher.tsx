@@ -10,10 +10,8 @@ interface LanguageSwitcherProps {
   onLanguageChange?: (language: Language) => void
 }
 
-// Custom event for language changes
 const LANGUAGE_CHANGE_EVENT = "languageChange"
 
-// Helper function to dispatch language change event
 const dispatchLanguageChange = (language: Language) => {
   window.dispatchEvent(new CustomEvent(LANGUAGE_CHANGE_EVENT, { detail: language }))
 }
@@ -22,7 +20,6 @@ export function LanguageSwitcher({ className, onLanguageChange }: LanguageSwitch
   const [currentLanguage, setCurrentLanguage] = useState<Language>("en")
 
   useEffect(() => {
-    // Load saved language preference
     const savedLanguage = localStorage.getItem("language") as Language
     if (savedLanguage && (savedLanguage === "en" || savedLanguage === "ar")) {
       setCurrentLanguage(savedLanguage)
@@ -31,7 +28,6 @@ export function LanguageSwitcher({ className, onLanguageChange }: LanguageSwitch
   }, [])
 
   const applyLanguage = (language: Language) => {
-    // Apply RTL/LTR to document
     if (language === "ar") {
       document.documentElement.dir = "rtl"
       document.documentElement.lang = "ar"
@@ -46,13 +42,10 @@ export function LanguageSwitcher({ className, onLanguageChange }: LanguageSwitch
     setCurrentLanguage(newLanguage)
     applyLanguage(newLanguage)
 
-    // Save language preference
     localStorage.setItem("language", newLanguage)
 
-    // Dispatch custom event to notify all components
     dispatchLanguageChange(newLanguage)
 
-    // Notify parent component
     onLanguageChange?.(newLanguage)
   }
 
@@ -69,30 +62,25 @@ export function LanguageSwitcher({ className, onLanguageChange }: LanguageSwitch
   )
 }
 
-// Hook to use translations
 export function useTranslations() {
   const [currentLanguage, setCurrentLanguage] = useState<Language>("en")
 
   useEffect(() => {
-    // Load initial language
     const savedLanguage = localStorage.getItem("language") as Language
     if (savedLanguage === "en" || savedLanguage === "ar") {
       setCurrentLanguage(savedLanguage)
     }
 
-    // Listen for language changes from the same tab
     const handleLanguageChange = (e: CustomEvent<Language>) => {
       setCurrentLanguage(e.detail)
     }
 
-    // Listen for language changes from other tabs
     const handleStorageChange = (e: StorageEvent) => {
       if (e.key === "language" && (e.newValue === "en" || e.newValue === "ar")) {
         setCurrentLanguage(e.newValue as Language)
       }
     }
 
-    // Add both event listeners
     window.addEventListener(LANGUAGE_CHANGE_EVENT, handleLanguageChange as EventListener)
     window.addEventListener("storage", handleStorageChange)
 
@@ -102,7 +90,6 @@ export function useTranslations() {
     }
   }, [])
 
-  // Memoised translator – identity only changes when language changes
   const t = React.useCallback(
     (key: keyof typeof translations.en) => translations[currentLanguage][key] || translations.en[key],
     [currentLanguage],

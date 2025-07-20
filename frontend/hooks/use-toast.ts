@@ -1,6 +1,5 @@
 "use client"
 
-// Inspired by react-hot-toast library
 import * as React from "react"
 
 import type { ToastActionElement, ToastProps } from "@/components/ui/toast"
@@ -88,8 +87,6 @@ export const reducer = (state: State, action: Action): State => {
     case "DISMISS_TOAST": {
       const { toastId } = action
 
-      // ! Side effects ! - This could be extracted into a dismissToast() action,
-      // but I'll keep it here for simplicity
       if (toastId) {
         addToRemoveQueue(toastId)
       } else {
@@ -153,7 +150,7 @@ function toast({ ...props }: Toast) {
     toast: {
       ...props,
       id,
-      duration: props.duration || 3000, // Default 3 seconds
+      duration: props.duration || 3000,
       open: true,
       onOpenChange: (open) => {
         if (!open) dismiss()
@@ -161,7 +158,6 @@ function toast({ ...props }: Toast) {
     },
   })
 
-  // Auto-dismiss after 3 seconds
   setTimeout(() => {
     dismiss()
   }, 3000)

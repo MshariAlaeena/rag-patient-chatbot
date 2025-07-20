@@ -22,13 +22,10 @@ export function WelcomeScreen({ onGetStarted }: WelcomeScreenProps) {
         backgroundBlendMode: "overlay",
       }}
     >
-      {/* Overlay */}
       <div className="absolute inset-0 bg-primary/80" />
 
-      {/* Content */}
       <div className="relative z-10 container mx-auto px-4 py-16 flex items-center min-h-screen">
         <div className="max-w-4xl mx-auto text-center text-white">
-          {/* Hero Content */}
           <div className="mb-12">
             <h1 className="text-5xl md:text-6xl font-bold mb-6 leading-tight">{t("welcomeTitle")}</h1>
             <p className="text-xl md:text-2xl mb-8 text-white/90 max-w-2xl mx-auto">{t("welcomeSubtitle")}</p>
@@ -43,7 +40,6 @@ export function WelcomeScreen({ onGetStarted }: WelcomeScreenProps) {
             </Button>
           </div>
 
-          {/* Features */}
           <div className="grid md:grid-cols-3 gap-8 mt-16">
             <div className="text-center">
               <div className="w-16 h-16 bg-accent rounded-full flex items-center justify-center mx-auto mb-4">
@@ -70,7 +66,6 @@ export function WelcomeScreen({ onGetStarted }: WelcomeScreenProps) {
             </div>
           </div>
 
-          {/* Stats */}
           <div className="grid grid-cols-3 gap-8 mt-16 pt-8 border-t border-white/20">
             <div className="text-center">
               <div className="text-3xl font-bold text-accent">25,000+</div>

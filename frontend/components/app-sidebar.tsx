@@ -48,13 +48,12 @@ export function AppSidebar({ currentScreen, onNavigate }: AppSidebarProps) {
   const handleNavigation = (screen: Screen) => {
     if (menuItems.find((item) => item.screen === screen)?.enabled) {
       onNavigate(screen)
-      setIsOpen(false) // Close mobile menu after navigation
+      setIsOpen(false)
     }
   }
 
   const SidebarContent = () => (
     <>
-      {/* Header */}
       <div className="p-4 border-b border-slate-200">
         <div className="flex items-center gap-3">
           <div className="w-8 h-8 bg-blue-500 rounded-lg flex items-center justify-center flex-shrink-0">
@@ -67,7 +66,6 @@ export function AppSidebar({ currentScreen, onNavigate }: AppSidebarProps) {
         </div>
       </div>
 
-      {/* Navigation Menu */}
       <div className="flex-1 py-4">
         <nav className="space-y-1 px-3">
           {menuItems.map((item) => {
@@ -105,7 +103,6 @@ export function AppSidebar({ currentScreen, onNavigate }: AppSidebarProps) {
         </nav>
       </div>
 
-      {/* Language Switcher */}
       <div className="p-4 border-t border-slate-200">
         <LanguageSwitcher className="w-full" />
       </div>
@@ -114,7 +111,6 @@ export function AppSidebar({ currentScreen, onNavigate }: AppSidebarProps) {
 
   return (
     <>
-      {/* Mobile Menu Button */}
       <div className="lg:hidden fixed top-4 left-4 z-50">
         <Sheet open={isOpen} onOpenChange={setIsOpen}>
           <SheetTrigger asChild>
@@ -130,7 +126,6 @@ export function AppSidebar({ currentScreen, onNavigate }: AppSidebarProps) {
         </Sheet>
       </div>
 
-      {/* Desktop Sidebar */}
       <div className={cn("hidden lg:flex w-64 bg-white border-r border-slate-200 flex-col h-screen sidebar-container")}>
         <SidebarContent />
       </div>

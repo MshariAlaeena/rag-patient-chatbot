@@ -20,15 +20,14 @@ export function ProfileForm({ onComplete }: ProfileFormProps) {
   const isRTL = currentLanguage === "ar"
 
   const [profile, setProfile] = useState({
-    name: "Ahmed", // Pre-filled for demo
-    quitDate: new Date().toISOString().split("T")[0], // Today's date in YYYY-MM-DD format
+    name: "Ahmed",
+    quitDate: new Date().toISOString().split("T")[0],
     currentNicotineMg: "0",
     coachingStyle: "supportive",
   })
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
-    // Convert date string back to Date object
     const profileWithDate = {
       ...profile,
       quitDate: new Date(profile.quitDate),
@@ -46,7 +45,6 @@ export function ProfileForm({ onComplete }: ProfileFormProps) {
           </div>
 
           <form onSubmit={handleSubmit} className="space-y-6">
-            {/* Name Input */}
             <div className="space-y-2">
               <Label htmlFor="name">{t("name")}</Label>
               <Input
@@ -58,7 +56,6 @@ export function ProfileForm({ onComplete }: ProfileFormProps) {
               />
             </div>
 
-            {/* Quit Date - Simple HTML date input */}
             <div className="space-y-2">
               <Label htmlFor="quitDate">{t("quitDate")}</Label>
               <Input
@@ -66,12 +63,11 @@ export function ProfileForm({ onComplete }: ProfileFormProps) {
                 type="date"
                 value={profile.quitDate}
                 onChange={(e) => setProfile({ ...profile, quitDate: e.target.value })}
-                max={new Date().toISOString().split("T")[0]} // Can't select future dates
+                max={new Date().toISOString().split("T")[0]}
                 required
               />
             </div>
 
-            {/* Nicotine Level */}
             <div className="space-y-2">
               <Label htmlFor="nicotine">{t("currentNicotine")}</Label>
               <Select
@@ -90,7 +86,6 @@ export function ProfileForm({ onComplete }: ProfileFormProps) {
               </Select>
             </div>
 
-            {/* Coaching Style */}
             <div className="space-y-3">
               <Label>{t("coachingStyle")}</Label>
               <RadioGroup
@@ -119,7 +114,6 @@ export function ProfileForm({ onComplete }: ProfileFormProps) {
               </RadioGroup>
             </div>
 
-            {/* Step Indicator */}
             <div className="flex justify-between items-center pt-4">
               <div className="text-sm text-gray-500">1 of 2</div>
               <Button type="submit" className="bg-primary hover:bg-primary-600">

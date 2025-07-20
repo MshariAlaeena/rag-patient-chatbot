@@ -57,7 +57,6 @@ export function SettingsScreen() {
           </Button>
         </div>
 
-        {/* Organization Settings */}
         <Card>
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
@@ -146,7 +145,6 @@ export function SettingsScreen() {
           </CardContent>
         </Card>
 
-        {/* Calendar Integration */}
         <Card>
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
@@ -201,7 +199,6 @@ export function SettingsScreen() {
           </CardContent>
         </Card>
 
-        {/* Notification Settings */}
         <Card>
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
@@ -258,7 +255,6 @@ export function SettingsScreen() {
           </CardContent>
         </Card>
 
-        {/* Security Settings */}
         <Card>
           <CardHeader>
             <CardTitle className="flex items-center gap-2">

@@ -2,7 +2,7 @@
 
 A full-stack **patient chatbot** application backed by Go (Gin) and Next.js.
 
-<img src="powered_by_groq.svg" style="width: 300px; height: auto;">
+<img src="https://console.groq.com/powered-by-groq.svg" style="width: 150px; height: auto;">
 
 ## 🚀 Project Overview
 
