@@ -76,7 +76,7 @@ A full-stack **patient chatbot** application backed by Go (Gin) and Next.js.
    Copy `frontend/.env.local.example` → `frontend/.env.local`:
 
    ```env
-   NEXT_PUBLIC_API_BASE_URL=http://localhost:8080
+   NEXT_PUBLIC_API_BASE_URL=http://localhost:3000
    ```
 
 > **Note**: Frontend env files do *not* contain secrets—only public-facing URLs.

@@ -289,16 +289,6 @@ func (s *Service) GetDashboardCalendar(ctx context.Context, userID uuid.UUID, da
 	for d := start; d.Before(end); d = d.AddDate(0, 0, 1) {
 		formattedDate := d.Format("2006-01-02")
 		if d.Before(user.CreatedAt) {
-			/*
-				Potential issues:
-				- ProgressEventsDays for a day is empty in two Cases:
-					1. User has not used system yet -->
-					2. User has not reported any slips on that day
-
-				Solutions:
-				1. Fetch
-
-			*/
 			fullMonthProgressEvents = append(fullMonthProgressEvents, dto.FullMonthProgressEvents{
 				Date:   formattedDate,
 				Status: repository.ProgressEventStatusUnknown,
@@ -391,15 +381,7 @@ func BuildFullMonthEvents(events []repository.ProgressEvent, month time.Time) []
 }
 
 func (s *Service) ReportSlip(ctx context.Context, userID uuid.UUID) error {
-	progressEvent := &repository.ProgressEvent{
-		BaseModel: repository.BaseModel{
-			ID: uuid.New(),
-		},
-		UserID: userID,
-		Date:   time.Now(),
-		Status: repository.ProgressEventStatusSlip,
-	}
-	err := s.repository.CreateProgressEvent(ctx, progressEvent)
+	err := s.repository.UpsertProgressStatus(ctx, uuid.MustParse("d1fc8771-bac7-4080-913b-2b25e4ab4957"), repository.ProgressEventStatusSlip) // @TODO: get user id from context or drill from handler
 	if err != nil {
 		return fmt.Errorf("reportSlip :: createProgressEvent: %w", err)
 	}

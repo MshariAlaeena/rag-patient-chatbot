@@ -50,7 +50,7 @@ const (
 	If you can't comply, respond exactly:
 
 	ERROR: Unable to comply with instructions.
-`
+	`
 	CHAT_SYSTEM_PROMPT_AR = `
 	أنت حمد، مساعد طبي محترف ورحيم.
 	استخدم مقتطفات السياق المقدمة فقط للإجابة—لا تضف أي تحية أو مقدمة أو أسئلة متابعة.
