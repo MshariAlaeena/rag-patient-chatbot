@@ -57,7 +57,7 @@ type ProgressEventStatus string
 const (
 	ProgressEventStatusSlip      ProgressEventStatus = "SLIP"
 	ProgressEventStatusUnknown   ProgressEventStatus = "UNKNOWN"
-	ProgressEventStatusSmokeFree ProgressEventStatus = "SMOKE_FREE" // @NOTE: this is not used in the database, it's only for the client to know that the user is smoke free
+	ProgressEventStatusSmokeFree ProgressEventStatus = "SMOKE_FREE"
 )
 
 type ProgressEvent struct {
